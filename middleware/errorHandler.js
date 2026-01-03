@@ -21,7 +21,7 @@ export class AppError extends Error {
  * Main error handling middleware
  * Must be used after all routes
  */
-export const errorHandler = (err, req, res, next) => {
+export const errorHandler = async (err, req, res, next) => {
     let statusCode = err.statusCode || 500;
     let message = err.message || 'Internal Server Error';
 
@@ -68,6 +68,9 @@ export const errorHandler = (err, req, res, next) => {
     }
 
     // Log error details (more verbose in development)
+    const errorLog = `[${new Date().toISOString()}] ${statusCode} - ${message}\nStack: ${err.stack}\nDetails: ${JSON.stringify(err)}\n\n`;
+
+    // Log to console
     if (process.env.NODE_ENV === 'development') {
         console.error('Error details:', {
             message: err.message,
@@ -79,16 +82,24 @@ export const errorHandler = (err, req, res, next) => {
         console.error('Error:', message);
     }
 
+    // Try to log to file (fire and forget)
+    try {
+        const fs = await import('fs');
+        fs.appendFileSync('error.log', errorLog);
+    } catch (e) {
+        console.error('Failed to write to error log');
+    }
+
     // Send error response
     const errorResponse = {
         success: false,
         error: {
             message,
             ...(err.details && { details: err.details }), // Include validation details if present
-            ...(process.env.NODE_ENV === 'development' && { 
+            ...(process.env.NODE_ENV === 'development' && {
                 stack: err.stack,
                 originalError: err.message,
-                code: err.code 
+                code: err.code
             }),
         },
     };

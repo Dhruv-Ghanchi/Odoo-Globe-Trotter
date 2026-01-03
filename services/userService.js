@@ -45,7 +45,7 @@ export const createUser = async (email, passwordHash) => {
 export const findByEmail = async (email) => {
     try {
         const result = await query(
-            `SELECT id, email, password_hash, created_at 
+            `SELECT id, email, password_hash, full_name, avatar_url, preferences, created_at 
              FROM users 
              WHERE email = $1`,
             [email.toLowerCase().trim()]
@@ -65,7 +65,7 @@ export const findByEmail = async (email) => {
 export const findById = async (userId) => {
     try {
         const result = await query(
-            `SELECT id, email, created_at 
+            `SELECT id, email, full_name, avatar_url, preferences, created_at 
              FROM users 
              WHERE id = $1`,
             [userId]
@@ -74,6 +74,68 @@ export const findById = async (userId) => {
         return result.rows.length > 0 ? result.rows[0] : null;
     } catch (error) {
         throw new AppError('Database error while finding user', 500);
+    }
+};
+
+/**
+ * Update user profile
+ * @param {number} userId - User ID
+ * @param {Object} updates - Fields to update (email, full_name, avatar_url, preferences)
+ * @returns {Promise<Object>} Updated user object
+ */
+export const updateUser = async (userId, updates) => {
+    const { email, full_name, avatar_url, preferences } = updates;
+
+    try {
+        const result = await query(
+            `UPDATE users 
+             SET email = COALESCE($1, email),
+                 full_name = COALESCE($2, full_name),
+                 avatar_url = COALESCE($3, avatar_url),
+                 preferences = COALESCE($4, preferences)
+             WHERE id = $5
+             RETURNING id, email, full_name, avatar_url, preferences, created_at`,
+            [
+                email ? email.toLowerCase().trim() : null,
+                full_name,
+                avatar_url,
+                preferences,
+                userId
+            ]
+        );
+
+        if (result.rows.length === 0) {
+            throw new AppError('User not found', 404);
+        }
+
+        return result.rows[0];
+    } catch (error) {
+        if (error.code === '23505') {
+            throw new AppError('Email already exists', 409);
+        }
+        throw new AppError('Database error while updating user', 500);
+    }
+};
+
+/**
+ * Update user password
+ * @param {number} userId - User ID
+ * @param {string} passwordHash - New hashed password
+ */
+export const updateUserPassword = async (userId, passwordHash) => {
+    try {
+        const result = await query(
+            `UPDATE users 
+             SET password_hash = $1
+             WHERE id = $2`,
+            [passwordHash, userId]
+        );
+
+        if (result.rowCount === 0) {
+            throw new AppError('User not found', 404);
+        }
+    } catch (error) {
+        throw new AppError('Database error while updating password', 500);
     }
 };
 

@@ -29,11 +29,21 @@ app.use((req, res, next) => {
     next();
 });
 
+// Serve uploaded files statically
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+app.use('/uploads', express.static(join(__dirname, 'uploads')));
+
 // Public routes (no authentication required)
 import publicRoutes from './routes/publicRoutes.js';
 app.use('/api/public', publicRoutes);
 
 // API routes (authentication required)
+// API routes (authentication required)
+import uploadRoutes from './routes/uploadRoutes.js';
+app.use('/api/upload', uploadRoutes);
 app.use('/api', routes);
 
 // Root endpoint

@@ -20,6 +20,9 @@ const VALID_DOMAINS = [
     // New gTLDs
     'io', 'ai', 'app', 'dev', 'tech', 'online', 'site', 'website',
     'blog', 'news', 'info', 'biz', 'name', 'pro',
+    
+    // Testing and common domains
+    'example', 'test', 'localhost',
 ];
 
 /**

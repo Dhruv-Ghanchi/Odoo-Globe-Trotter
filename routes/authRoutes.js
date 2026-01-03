@@ -13,7 +13,7 @@ import express from 'express';
 import { body } from 'express-validator';
 import { validate } from '../middleware/validation.js';
 import { authenticate } from '../middleware/auth.js';
-import { signup, login, getMe, getProfile, updateProfile, deleteProfile } from '../controllers/authController.js';
+import { signup, login, getMe, getProfile, updateProfile, deleteProfile, changePassword } from '../controllers/authController.js';
 import { customEmailValidator } from '../utils/emailValidator.js';
 
 const router = express.Router();
@@ -225,6 +225,20 @@ router.delete(
     '/profile',
     authenticate,
     deleteProfile
+);
+
+/**
+ * PUT /auth/change-password
+ * Change user password
+ */
+router.put(
+    '/change-password',
+    authenticate,
+    [
+        body('newPassword').isLength({ min: 6 }).withMessage('New password must be at least 6 characters long'),
+        validate
+    ],
+    changePassword
 );
 
 export default router;

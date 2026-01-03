@@ -102,61 +102,54 @@ const BudgetView = ({ tripId }) => {
     );
   }
 
-  const { trip, summary, daily_breakdown } = budget;
-  const averageCost = summary.average_cost_per_day;
+  // Handle backend response format
+  const total_cost = budget.summary?.total_cost || budget.total_cost || 0;
+  const daily_costs = budget.daily_breakdown || budget.daily_costs || [];
+  const average_cost_per_day = budget.summary?.average_cost_per_day || budget.average_cost_per_day || 0;
 
   return (
     <div className="budget-view-container">
       <div className="budget-header">
-        <h2>{trip.title}</h2>
-        <p className="budget-destination">📍 {trip.destination}</p>
+        <h2>Trip Budget</h2>
       </div>
 
-      {/* Total Cost Summary */}
-      <div className="budget-summary">
-        <div className="summary-card total-cost">
-          <div className="summary-label">Total Cost</div>
-          <div className="summary-value">{formatCurrency(summary.total_cost)}</div>
-        </div>
-        <div className="summary-card">
-          <div className="summary-label">Average per Day</div>
-          <div className="summary-value">{formatCurrency(summary.average_cost_per_day)}</div>
-        </div>
-        <div className="summary-card">
-          <div className="summary-label">Activities</div>
-          <div className="summary-value">{summary.activity_count}</div>
+      {/* Total Cost - Prominently Displayed */}
+      <div className="budget-total-card">
+        <div className="total-cost-label">Total Budget</div>
+        <div className="total-cost-amount">{formatCurrency(total_cost)}</div>
+        <div className="total-cost-subtitle">
+          Average: {formatCurrency(average_cost_per_day)} per day
         </div>
       </div>
 
       {/* Daily Breakdown Table */}
-      {daily_breakdown && daily_breakdown.length > 0 ? (
+      {daily_costs && daily_costs.length > 0 ? (
         <div className="budget-breakdown">
           <h3>Daily Cost Breakdown</h3>
           <table className="breakdown-table">
             <thead>
               <tr>
                 <th>Date</th>
-                <th>Activities</th>
                 <th>Daily Cost</th>
-                <th>vs Average</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
-              {daily_breakdown.map((day) => {
-                const exceedsAverage = day.cost > averageCost;
-                const difference = day.cost - averageCost;
+              {daily_costs.map((day) => {
+                const dailyCost = day.daily_cost || day.cost || 0;
+                const exceedsAverage = average_cost_per_day > 0 && dailyCost > average_cost_per_day;
+                const difference = dailyCost - average_cost_per_day;
                 return (
                   <tr
                     key={day.date}
                     className={exceedsAverage ? 'exceeds-average' : ''}
                   >
                     <td>{formatDate(day.date)}</td>
-                    <td>{day.activity_count}</td>
-                    <td className="cost-cell">{formatCurrency(day.cost)}</td>
+                    <td className="cost-cell">{formatCurrency(dailyCost)}</td>
                     <td className={exceedsAverage ? 'exceeds-indicator' : 'within-average'}>
                       {exceedsAverage ? (
                         <span className="exceeds-badge">
-                          +{formatCurrency(Math.abs(difference))}
+                          +{formatCurrency(Math.abs(difference))} above average
                         </span>
                       ) : (
                         <span className="within-badge">Within average</span>
@@ -170,7 +163,7 @@ const BudgetView = ({ tripId }) => {
         </div>
       ) : (
         <div className="budget-empty">
-          <p>No cost data available for this trip.</p>
+          <p>No cost data available. Add activities with costs to see your budget breakdown.</p>
         </div>
       )}
     </div>

@@ -64,6 +64,8 @@
 .activities-by-date {
   overflow-y: auto;
   flex: 1;
+  /* Prevent layout shifts when form opens */
+  contain: layout;
 }
 
 .activity-date-group {
@@ -83,6 +85,12 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  align-items: stretch;
+}
+
+.activity-items > .activity-item {
+  flex-shrink: 0;
+  flex-grow: 0;
 }
 
 .empty-state {

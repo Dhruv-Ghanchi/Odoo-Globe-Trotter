@@ -35,9 +35,10 @@ const verifyTripOwnership = async (tripId, userId) => {
  * @param {string} time - Activity time (HH:MM:SS)
  * @param {string} title - Activity title
  * @param {string|null} description - Activity description (optional)
+ * @param {number} cost - Activity cost (optional, defaults to 0)
  * @returns {Promise<Object>} Created activity object
  */
-export const createActivity = async (tripId, userId, date, time, title, description = null) => {
+export const createActivity = async (tripId, userId, date, time, title, description = null, cost = 0) => {
     try {
         // Verify trip ownership
         await verifyTripOwnership(tripId, userId);
@@ -67,11 +68,17 @@ export const createActivity = async (tripId, userId, date, time, title, descript
             throw new AppError('Invalid time format', 400);
         }
 
+        // Validate and parse cost
+        const activityCost = cost !== undefined && cost !== null ? parseFloat(cost) : 0;
+        if (isNaN(activityCost) || activityCost < 0) {
+            throw new AppError('Cost must be a valid positive number', 400);
+        }
+
         const result = await query(
-            `INSERT INTO activities (trip_id, date, time, title, description) 
-             VALUES ($1, $2, $3, $4, $5) 
-             RETURNING id, trip_id, date, time, title, description, created_at, updated_at`,
-            [tripId, date, time, trimmedTitle, trimmedDescription]
+            `INSERT INTO activities (trip_id, date, time, title, description, cost) 
+             VALUES ($1, $2, $3, $4, $5, $6) 
+             RETURNING id, trip_id, date, time, title, description, cost, created_at, updated_at`,
+            [tripId, date, time, trimmedTitle, trimmedDescription, activityCost]
         );
 
         if (result.rows.length === 0) {
@@ -100,7 +107,7 @@ export const getActivitiesByTripId = async (tripId, userId) => {
         await verifyTripOwnership(tripId, userId);
 
         const result = await query(
-            `SELECT id, trip_id, date, time, title, description, created_at, updated_at 
+            `SELECT id, trip_id, date, time, title, description, cost, created_at, updated_at 
              FROM activities 
              WHERE trip_id = $1 
              ORDER BY date ASC, time ASC`,
@@ -128,7 +135,7 @@ export const getItineraryByTripId = async (tripId, userId) => {
         await verifyTripOwnership(tripId, userId);
 
         const result = await query(
-            `SELECT id, trip_id, date, time, title, description, created_at, updated_at 
+            `SELECT id, trip_id, date, time, title, description, cost, created_at, updated_at 
              FROM activities 
              WHERE trip_id = $1 
              ORDER BY date ASC, time ASC`,
@@ -152,7 +159,7 @@ export const getItineraryByTripId = async (tripId, userId) => {
 export const getActivityById = async (activityId) => {
     try {
         const result = await query(
-            `SELECT id, trip_id, date, time, title, description, created_at, updated_at 
+            `SELECT id, trip_id, date, time, title, description, cost, created_at, updated_at 
              FROM activities 
              WHERE id = $1`,
             [activityId]
@@ -227,6 +234,14 @@ export const updateActivity = async (activityId, userId, updates) => {
             fields.push(`description = $${paramIndex++}`);
             values.push(trimmedDescription);
         }
+        if (updates.cost !== undefined) {
+            const activityCost = parseFloat(updates.cost);
+            if (isNaN(activityCost) || activityCost < 0) {
+                throw new AppError('Cost must be a valid positive number', 400);
+            }
+            fields.push(`cost = $${paramIndex++}`);
+            values.push(activityCost);
+        }
         if (updates.date !== undefined) {
             const activityDate = new Date(updates.date);
             if (isNaN(activityDate.getTime())) {
@@ -253,7 +268,7 @@ export const updateActivity = async (activityId, userId, updates) => {
             UPDATE activities 
             SET ${fields.join(', ')} 
             WHERE id = $${paramIndex} 
-            RETURNING id, trip_id, date, time, title, description, created_at, updated_at
+            RETURNING id, trip_id, date, time, title, description, cost, created_at, updated_at
         `;
 
         const result = await query(updateQuery, values);

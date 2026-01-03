@@ -57,6 +57,16 @@ const Dashboard = () => {
         return;
       }
       
+      // Check if click is on view mode toggle buttons
+      if (target.closest('.view-mode-toggle')) {
+        return;
+      }
+      
+      // Check if click is on dashboard right panel (where views are displayed)
+      if (target.closest('.dashboard-right')) {
+        return;
+      }
+      
       // If we get here, click is outside - deselect
       if (selectedTripId) {
         setSelectedTripId(null);

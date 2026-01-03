@@ -142,6 +142,7 @@ const ItineraryView = ({ tripId }) => {
       <div className="itinerary-header">
         <h2>{itinerary.trip.title}</h2>
         <p className="itinerary-destination">📍 {itinerary.trip.destination}</p>
+        <p className="itinerary-note">📋 Read-only view of your activities (same as Activities tab)</p>
       </div>
 
       <div className="itinerary-content">
@@ -158,6 +159,12 @@ const ItineraryView = ({ tripId }) => {
                     <div className="activity-title">{activity.title}</div>
                     {activity.description && (
                       <div className="activity-description">{activity.description}</div>
+                    )}
+                    {activity.cost && parseFloat(activity.cost) > 0 && (
+                      <div className="activity-cost">
+                        <span className="cost-label">Cost:</span>
+                        <span className="cost-value">${parseFloat(activity.cost).toFixed(2)}</span>
+                      </div>
                     )}
                   </div>
                 </div>

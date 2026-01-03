@@ -5,7 +5,7 @@
  * Displays validation errors and handles authentication.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { validateEmail } from '../utils/emailValidator.js';
@@ -15,6 +15,7 @@ import './Auth.css';
 const Login = () => {
   const navigate = useNavigate();
   const { login, isAuthenticated, error, clearError } = useAuth();
+  const wasAuthenticatedOnMount = useRef(isAuthenticated); // Track initial auth state
 
   const [formData, setFormData] = useState({
     email: '',
@@ -25,9 +26,11 @@ const Login = () => {
   const [showErrorDialog, setShowErrorDialog] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Redirect if already authenticated
+  // Redirect if already authenticated (only if user was already logged in on mount)
   useEffect(() => {
-    if (isAuthenticated) {
+    // Only show message if user was already authenticated when component mounted
+    // Not if they just logged in (wasAuthenticatedOnMount will be false in that case)
+    if (isAuthenticated && wasAuthenticatedOnMount.current) {
       console.log('Login: User is already authenticated, redirecting to dashboard');
       // Show a brief message before redirecting
       setErrorMessage('You are already logged in. Redirecting to dashboard...');
@@ -36,6 +39,10 @@ const Login = () => {
       setTimeout(() => {
         navigate('/dashboard', { replace: true });
       }, 1500);
+    } else if (isAuthenticated && !wasAuthenticatedOnMount.current) {
+      // User just logged in - redirect silently without message
+      console.log('Login: User just logged in, redirecting to dashboard');
+      navigate('/dashboard', { replace: true });
     }
   }, [isAuthenticated, navigate]);
 

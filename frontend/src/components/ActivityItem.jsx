@@ -41,6 +41,12 @@ const ActivityItem = ({ activity, onEdit, onDelete }) => {
         {activity.description && (
           <p className="activity-description">{activity.description}</p>
         )}
+        {activity.cost && parseFloat(activity.cost) > 0 && (
+          <div className="activity-cost">
+            <span className="cost-label">Cost:</span>
+            <span className="cost-value">${parseFloat(activity.cost).toFixed(2)}</span>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -14,6 +14,7 @@ const ActivityForm = ({ tripId, activity, onSave, onCancel }) => {
     time: '',
     title: '',
     description: '',
+    cost: '0.00',
   });
   const [validationErrors, setValidationErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,6 +30,7 @@ const ActivityForm = ({ tripId, activity, onSave, onCancel }) => {
         time: activity.time.substring(0, 5) || '', // Format HH:MM from HH:MM:SS
         title: activity.title || '',
         description: activity.description || '',
+        cost: activity.cost ? parseFloat(activity.cost).toFixed(2) : '0.00',
       });
     } else {
       // Set default date to today
@@ -55,6 +57,10 @@ const ActivityForm = ({ tripId, activity, onSave, onCancel }) => {
 
     if (!formData.title.trim()) {
       errors.title = 'Title is required';
+    }
+
+    if (formData.cost !== '' && (isNaN(parseFloat(formData.cost)) || parseFloat(formData.cost) < 0)) {
+      errors.cost = 'Cost must be a valid positive number';
     }
 
     setValidationErrors(errors);
@@ -103,6 +109,7 @@ const ActivityForm = ({ tripId, activity, onSave, onCancel }) => {
         time: timeFormatted,
         title: formData.title.trim(),
         description: formData.description.trim() || null,
+        cost: parseFloat(formData.cost) || 0,
       };
 
       let response;
@@ -208,6 +215,26 @@ const ActivityForm = ({ tripId, activity, onSave, onCancel }) => {
               placeholder="Add details about this activity..."
               disabled={isSubmitting}
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="cost">Cost (Optional)</label>
+            <input
+              type="number"
+              id="cost"
+              name="cost"
+              value={formData.cost}
+              onChange={handleChange}
+              className={validationErrors.cost ? 'error' : ''}
+              placeholder="0.00"
+              min="0"
+              step="0.01"
+              disabled={isSubmitting}
+            />
+            {validationErrors.cost && (
+              <span className="field-error">{validationErrors.cost}</span>
+            )}
+            <small className="field-hint">Enter the estimated cost for this activity</small>
           </div>
 
           <div className="form-actions">

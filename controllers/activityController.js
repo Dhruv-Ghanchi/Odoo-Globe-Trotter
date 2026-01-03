@@ -24,13 +24,13 @@ export const createActivityHandler = async (req, res, next) => {
     try {
         const userId = req.user.userId;
         const tripId = parseInt(req.params.id);
-        const { date, time, title, description } = req.body;
+        const { date, time, title, description, cost } = req.body;
 
         if (isNaN(tripId)) {
             return next(new AppError('Invalid trip ID', 400));
         }
 
-        const activity = await createActivity(tripId, userId, date, time, title, description);
+        const activity = await createActivity(tripId, userId, date, time, title, description, cost);
 
         res.status(201).json({
             success: true,
@@ -90,7 +90,7 @@ export const updateActivityHandler = async (req, res, next) => {
             return next(new AppError('Invalid activity ID', 400));
         }
 
-        const { date, time, title, description } = req.body;
+        const { date, time, title, description, cost } = req.body;
 
         // Build updates object (only include provided fields)
         const updates = {};
@@ -98,6 +98,7 @@ export const updateActivityHandler = async (req, res, next) => {
         if (time !== undefined) updates.time = time;
         if (title !== undefined) updates.title = title;
         if (description !== undefined) updates.description = description;
+        if (cost !== undefined) updates.cost = cost;
 
         if (Object.keys(updates).length === 0) {
             return next(new AppError('No fields provided to update', 400));

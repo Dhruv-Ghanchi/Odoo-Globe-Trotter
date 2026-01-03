@@ -153,6 +153,48 @@ export const deleteAccount = async () => {
   }
 };
 
+/**
+ * Upload an image
+ * @param {File} file - Image file to upload
+ * @returns {Promise<Object>} Response with file URL
+ */
+export const uploadImage = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    // We need to pass the headers specifically for this request
+    // or rely on the instance. However, keeping Content-Type undefined
+    // lets the browser set it with the boundary automatically.
+    const response = await api.post('/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: { message: 'Failed to upload image' } };
+  }
+};
+
+/**
+ * Change password
+ * @param {string} currentPassword
+ * @param {string} newPassword
+ * @returns {Promise<Object>} Response
+ */
+export const changePassword = async (currentPassword, newPassword) => {
+  try {
+    const response = await api.put('/auth/change-password', {
+      currentPassword,
+      newPassword,
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: { message: 'Failed to change password' } };
+  }
+};
+
 export default api;
 
 

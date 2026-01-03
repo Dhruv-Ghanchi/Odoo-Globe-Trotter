@@ -69,17 +69,7 @@ const Dashboard = () => {
   }, [selectedTripId]);
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <h1>Travel Planner</h1>
-        <div className="user-info">
-          <span>{user?.email}</span>
-          <button onClick={logout} className="logout-button">
-            Logout
-          </button>
-        </div>
-      </header>
-
+    <div className="dashboard-container page-container">
       <main className="dashboard-content" ref={dashboardContentRef}>
         <div className="dashboard-layout">
           <div className="dashboard-left">

@@ -142,9 +142,6 @@ const Dashboard = () => {
       </main>
       <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
-        </div>
-      </main>
-    </div>
   );
 };
 

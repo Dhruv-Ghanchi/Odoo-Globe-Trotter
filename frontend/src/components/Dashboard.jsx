@@ -8,11 +8,15 @@ import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import TripList from './TripList.jsx';
 import ActivityList from './ActivityList.jsx';
+import ItineraryView from './ItineraryView.jsx';
+import BudgetView from './BudgetView.jsx';
+import TimelineView from './TimelineView.jsx';
 import './Dashboard.css';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const [selectedTripId, setSelectedTripId] = useState(null);
+  const [viewMode, setViewMode] = useState('activities'); // 'activities', 'itinerary', 'budget', or 'timeline'
   const dashboardContentRef = useRef(null);
 
   /**
@@ -79,7 +83,43 @@ const Dashboard = () => {
             />
           </div>
           <div className="dashboard-right">
-            <ActivityList tripId={selectedTripId} />
+            {selectedTripId && (
+              <div className="view-mode-toggle">
+                <button
+                  className={viewMode === 'activities' ? 'active' : ''}
+                  onClick={() => setViewMode('activities')}
+                >
+                  Activities
+                </button>
+                <button
+                  className={viewMode === 'itinerary' ? 'active' : ''}
+                  onClick={() => setViewMode('itinerary')}
+                >
+                  Itinerary
+                </button>
+                <button
+                  className={viewMode === 'budget' ? 'active' : ''}
+                  onClick={() => setViewMode('budget')}
+                >
+                  Budget
+                </button>
+                <button
+                  className={viewMode === 'timeline' ? 'active' : ''}
+                  onClick={() => setViewMode('timeline')}
+                >
+                  Timeline
+                </button>
+              </div>
+            )}
+            {viewMode === 'activities' ? (
+              <ActivityList tripId={selectedTripId} />
+            ) : viewMode === 'itinerary' ? (
+              <ItineraryView tripId={selectedTripId} />
+            ) : viewMode === 'budget' ? (
+              <BudgetView tripId={selectedTripId} />
+            ) : (
+              <TimelineView tripId={selectedTripId} />
+            )}
           </div>
         </div>
       </main>

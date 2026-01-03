@@ -76,6 +76,39 @@
   padding: 24px;
   overflow-y: auto;
   max-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+}
+
+.view-mode-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.view-mode-toggle button {
+  flex: 1;
+  padding: 8px 16px;
+  background: #f0f0f0;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.view-mode-toggle button:hover {
+  background: #e0e0e0;
+}
+
+.view-mode-toggle button.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #667eea;
 }
 
 /* Responsive design */

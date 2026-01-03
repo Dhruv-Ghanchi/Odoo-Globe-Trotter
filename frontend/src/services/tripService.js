@@ -76,4 +76,32 @@ export const deleteTrip = async (tripId) => {
   }
 };
 
+/**
+ * Get itinerary for a trip (read-only)
+ * @param {number} tripId - Trip ID
+ * @returns {Promise<Object>} Response with trip and activities
+ */
+export const getItinerary = async (tripId) => {
+  try {
+    const response = await api.get(`/trips/${tripId}/itinerary`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: { message: 'Failed to fetch itinerary' } };
+  }
+};
+
+/**
+ * Get budget breakdown for a trip
+ * @param {number} tripId - Trip ID
+ * @returns {Promise<Object>} Response with budget data
+ */
+export const getBudget = async (tripId) => {
+  try {
+    const response = await api.get(`/trips/${tripId}/budget`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: { message: 'Failed to fetch budget' } };
+  }
+};
+
 

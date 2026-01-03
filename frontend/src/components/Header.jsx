@@ -21,6 +21,9 @@ const Header = () => {
         <nav className="nav">
           {isAuthenticated ? (
             <>
+              <Link to="/profile" className="nav-link">
+                Profile
+              </Link>
               <span className="nav-user">{user?.email}</span>
               <button className="btn btn-ghost" onClick={handleLogout}>
                 Logout

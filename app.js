@@ -29,7 +29,11 @@ app.use((req, res, next) => {
     next();
 });
 
-// API routes
+// Public routes (no authentication required)
+import publicRoutes from './routes/publicRoutes.js';
+app.use('/api/public', publicRoutes);
+
+// API routes (authentication required)
 app.use('/api', routes);
 
 // Root endpoint

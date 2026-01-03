@@ -110,6 +110,46 @@ export const logout = () => {
   setAuthHeader(null);
 };
 
+/**
+ * Get user profile
+ * @returns {Promise<Object>} Response with user profile
+ */
+export const getProfile = async () => {
+  try {
+    const response = await api.get('/auth/profile');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: { message: 'Failed to fetch profile' } };
+  }
+};
+
+/**
+ * Update user profile
+ * @param {Object} profileData - Profile data (email)
+ * @returns {Promise<Object>} Response with updated user
+ */
+export const updateProfile = async (profileData) => {
+  try {
+    const response = await api.put('/auth/profile', profileData);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: { message: 'Failed to update profile' } };
+  }
+};
+
+/**
+ * Delete user account
+ * @returns {Promise<Object>} Response
+ */
+export const deleteAccount = async () => {
+  try {
+    const response = await api.delete('/auth/profile');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: { message: 'Failed to delete account' } };
+  }
+};
+
 export default api;
 
 

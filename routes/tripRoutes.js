@@ -22,7 +22,9 @@ import {
     getTripHandler,
     updateTripHandler,
     deleteTripHandler,
+    getItineraryHandler,
 } from '../controllers/tripController.js';
+import { getBudgetHandler } from '../controllers/budgetController.js';
 
 const router = express.Router();
 
@@ -193,6 +195,103 @@ router.post(
 router.get(
     '/',
     getTripsHandler
+);
+
+/**
+ * GET /trips/:id/itinerary
+ * Get itinerary for a specific trip (read-only, activities ordered by date and time)
+ * 
+ * Headers:
+ * Authorization: Bearer <token>
+ * 
+ * Success Response (200):
+ * {
+ *   "success": true,
+ *   "message": "Itinerary retrieved successfully",
+ *   "data": {
+ *     "trip": {
+ *       "id": 1,
+ *       "title": "Summer Vacation",
+ *       "destination": "Paris, France",
+ *       "start_date": "2024-06-01",
+ *       "end_date": "2024-06-15"
+ *     },
+ *     "activities": [
+ *       {
+ *         "id": 1,
+ *         "trip_id": 1,
+ *         "date": "2024-06-01",
+ *         "time": "09:00:00",
+ *         "title": "Breakfast",
+ *         "description": "Hotel breakfast",
+ *         "created_at": "2024-01-15T10:30:00.000Z",
+ *         "updated_at": "2024-01-15T10:30:00.000Z"
+ *       }
+ *     ]
+ *   }
+ * }
+ * 
+ * Error Responses:
+ * - 400: Invalid trip ID
+ * - 401: Not authenticated
+ * - 403: Trip belongs to another user
+ * - 404: Trip not found
+ */
+router.get(
+    '/:id/itinerary',
+    tripIdValidation,
+    validate,
+    getItineraryHandler
+);
+
+/**
+ * GET /trips/:id/budget
+ * Get budget breakdown for a specific trip
+ * 
+ * Headers:
+ * Authorization: Bearer <token>
+ * 
+ * Success Response (200):
+ * {
+ *   "success": true,
+ *   "message": "Budget retrieved successfully",
+ *   "data": {
+ *     "trip": {
+ *       "id": 1,
+ *       "title": "Summer Vacation",
+ *       "destination": "Paris, France",
+ *       "start_date": "2024-06-01",
+ *       "end_date": "2024-06-15",
+ *       "total_days": 15
+ *     },
+ *     "summary": {
+ *       "total_cost": 2500.00,
+ *       "activity_count": 20,
+ *       "average_cost_per_day": 166.67,
+ *       "average_cost_per_active_day": 125.00,
+ *       "days_with_activities": 20
+ *     },
+ *     "daily_breakdown": [
+ *       {
+ *         "date": "2024-06-01",
+ *         "cost": 150.00,
+ *         "activity_count": 3
+ *       }
+ *     ]
+ *   }
+ * }
+ * 
+ * Error Responses:
+ * - 400: Invalid trip ID
+ * - 401: Not authenticated
+ * - 403: Trip belongs to another user
+ * - 404: Trip not found
+ */
+router.get(
+    '/:id/budget',
+    tripIdValidation,
+    validate,
+    getBudgetHandler
 );
 
 /**

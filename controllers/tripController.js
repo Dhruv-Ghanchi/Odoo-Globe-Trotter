@@ -12,6 +12,7 @@ import {
     updateTrip,
     deleteTrip,
 } from '../services/tripService.js';
+import { getItineraryByTripId } from '../services/activityService.js';
 import { AppError } from '../middleware/errorHandler.js';
 
 /**
@@ -167,6 +168,52 @@ export const deleteTripHandler = async (req, res, next) => {
             success: true,
             message: 'Trip deleted successfully',
             data: null,
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * GET /trips/:id/itinerary
+ * Get itinerary for a specific trip (read-only)
+ * 
+ * Response: { success, data: { trip, activities } }
+ */
+export const getItineraryHandler = async (req, res, next) => {
+    try {
+        const userId = req.user.userId;
+        const tripId = parseInt(req.params.id, 10);
+        
+        if (isNaN(tripId) || tripId <= 0 || !Number.isInteger(tripId)) {
+            return next(new AppError('Invalid trip ID', 400));
+        }
+
+        // Get trip to verify ownership and get trip details
+        const trip = await getTripById(tripId);
+        if (!trip) {
+            return next(new AppError('Trip not found', 404));
+        }
+        if (trip.user_id !== userId) {
+            return next(new AppError('You do not have permission to access this trip', 403));
+        }
+
+        // Get activities ordered by date and time
+        const activities = await getItineraryByTripId(tripId, userId);
+
+        res.status(200).json({
+            success: true,
+            message: 'Itinerary retrieved successfully',
+            data: {
+                trip: {
+                    id: trip.id,
+                    title: trip.title,
+                    destination: trip.destination,
+                    start_date: trip.start_date,
+                    end_date: trip.end_date,
+                },
+                activities,
+            },
         });
     } catch (error) {
         next(error);

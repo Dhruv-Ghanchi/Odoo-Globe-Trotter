@@ -13,7 +13,7 @@ import express from 'express';
 import { body } from 'express-validator';
 import { validate } from '../middleware/validation.js';
 import { authenticate } from '../middleware/auth.js';
-import { signup, login, getMe } from '../controllers/authController.js';
+import { signup, login, getMe, getProfile, updateProfile, deleteProfile } from '../controllers/authController.js';
 import { customEmailValidator } from '../utils/emailValidator.js';
 
 const router = express.Router();
@@ -135,6 +135,96 @@ router.get(
     '/me',
     authenticate,
     getMe
+);
+
+/**
+ * GET /auth/profile
+ * Get current user profile
+ * 
+ * Headers:
+ * Authorization: Bearer <token>
+ * 
+ * Success Response (200):
+ * {
+ *   "success": true,
+ *   "message": "Profile retrieved successfully",
+ *   "data": {
+ *     "user": {
+ *       "id": 1,
+ *       "email": "user@example.com",
+ *       "created_at": "2024-01-01T00:00:00.000Z"
+ *     }
+ *   }
+ * }
+ * 
+ * Error Responses:
+ * - 401: Not authenticated
+ * - 404: User not found
+ */
+router.get(
+    '/profile',
+    authenticate,
+    getProfile
+);
+
+/**
+ * PUT /auth/profile
+ * Update user profile (email)
+ * 
+ * Headers:
+ * Authorization: Bearer <token>
+ * 
+ * Request Body:
+ * {
+ *   "email": "newemail@example.com"
+ * }
+ * 
+ * Success Response (200):
+ * {
+ *   "success": true,
+ *   "message": "Profile updated successfully",
+ *   "data": {
+ *     "user": {
+ *       "id": 1,
+ *       "email": "newemail@example.com",
+ *       "created_at": "2024-01-01T00:00:00.000Z"
+ *     }
+ *   }
+ * }
+ * 
+ * Error Responses:
+ * - 400: Validation error or email required
+ * - 401: Not authenticated
+ * - 409: Email already exists
+ */
+router.put(
+    '/profile',
+    authenticate,
+    [emailValidation, validate],
+    updateProfile
+);
+
+/**
+ * DELETE /auth/profile
+ * Delete user account
+ * 
+ * Headers:
+ * Authorization: Bearer <token>
+ * 
+ * Success Response (200):
+ * {
+ *   "success": true,
+ *   "message": "Account deleted successfully"
+ * }
+ * 
+ * Error Responses:
+ * - 401: Not authenticated
+ * - 404: User not found
+ */
+router.delete(
+    '/profile',
+    authenticate,
+    deleteProfile
 );
 
 export default router;

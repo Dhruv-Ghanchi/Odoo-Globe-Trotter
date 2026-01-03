@@ -1,0 +1,197 @@
+/**
+ * Budget View Styles
+ */
+
+.budget-view-container {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.budget-header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.budget-header h2 {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+.budget-destination {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
+
+.budget-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.summary-card {
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.summary-card.total-cost {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+}
+
+.summary-card.total-cost .summary-label,
+.summary-card.total-cost .summary-value {
+  color: white;
+}
+
+.summary-label {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.summary-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+.budget-breakdown {
+  margin-top: 24px;
+}
+
+.budget-breakdown h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.breakdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.breakdown-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.breakdown-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.breakdown-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: background-color 0.2s;
+}
+
+.breakdown-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.breakdown-table tbody tr.exceeds-average {
+  background-color: #fff5f5;
+  border-left: 3px solid #e74c3c;
+}
+
+.breakdown-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.breakdown-table td {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #333;
+}
+
+.cost-cell {
+  font-weight: 600;
+  color: #667eea;
+}
+
+.exceeds-indicator {
+  text-align: right;
+}
+
+.exceeds-badge {
+  display: inline-block;
+  background: #fee;
+  color: #e74c3c;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.within-average {
+  text-align: right;
+}
+
+.within-badge {
+  display: inline-block;
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.budget-loading,
+.budget-error,
+.budget-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #999;
+  text-align: center;
+}
+
+.budget-error .error-message {
+  color: #e74c3c;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.retry-button {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.retry-button:hover {
+  background: #5568d3;
+}
+

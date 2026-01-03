@@ -5,7 +5,7 @@
  * Coordinates between services and sends appropriate responses.
  */
 
-import { createUser, findByEmail, findById } from '../services/userService.js';
+import { createUser, findByEmail, findById, updateUserEmail, deleteUser } from '../services/userService.js';
 import { hashPassword, verifyPassword } from '../utils/password.js';
 import { generateToken } from '../utils/jwt.js';
 import { AppError } from '../middleware/errorHandler.js';
@@ -129,6 +129,84 @@ export const getMe = async (req, res, next) => {
                     created_at: user.created_at,
                 },
             },
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * GET /auth/profile
+ * Get current user profile
+ * 
+ * Response: { success, data: { user } }
+ */
+export const getProfile = async (req, res, next) => {
+    try {
+        const userId = req.user.userId;
+        const user = await findById(userId);
+
+        if (!user) {
+            return next(new AppError('User not found', 404));
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Profile retrieved successfully',
+            data: {
+                user,
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * PUT /auth/profile
+ * Update user profile (email)
+ * 
+ * Request body: { email }
+ * Response: { success, data: { user } }
+ */
+export const updateProfile = async (req, res, next) => {
+    try {
+        const userId = req.user.userId;
+        const { email } = req.body;
+
+        if (!email) {
+            return next(new AppError('Email is required', 400));
+        }
+
+        const updatedUser = await updateUserEmail(userId, email);
+
+        res.status(200).json({
+            success: true,
+            message: 'Profile updated successfully',
+            data: {
+                user: updatedUser,
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+/**
+ * DELETE /auth/profile
+ * Delete user account
+ * 
+ * Response: { success, message }
+ */
+export const deleteProfile = async (req, res, next) => {
+    try {
+        const userId = req.user.userId;
+
+        await deleteUser(userId);
+
+        res.status(200).json({
+            success: true,
+            message: 'Account deleted successfully',
         });
     } catch (error) {
         next(error);

@@ -1,0 +1,163 @@
+/**
+ * Timeline View Styles
+ */
+
+.timeline-view-container {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.timeline-header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.timeline-header h2 {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+}
+
+.timeline-destination {
+  margin: 0;
+  font-size: 16px;
+  color: #666;
+}
+
+.timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.timeline-day {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+.timeline-day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.timeline-day-header:hover {
+  background: #f8f9fa;
+}
+
+.day-info {
+  flex: 1;
+}
+
+.day-date {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.day-activity-count {
+  font-size: 13px;
+  color: #666;
+}
+
+.day-toggle {
+  font-size: 12px;
+  color: #667eea;
+  transition: transform 0.2s;
+  padding: 4px 8px;
+}
+
+.day-toggle.expanded {
+  transform: rotate(0deg);
+}
+
+.timeline-activities {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: white;
+}
+
+.timeline-activity {
+  display: flex;
+  gap: 16px;
+  padding: 12px;
+  border-left: 3px solid #667eea;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.activity-time {
+  font-weight: 600;
+  color: #667eea;
+  font-size: 14px;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.activity-content {
+  flex: 1;
+}
+
+.activity-city {
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.activity-title {
+  font-weight: 500;
+  color: #333;
+  font-size: 15px;
+}
+
+.timeline-loading,
+.timeline-error,
+.timeline-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #999;
+  text-align: center;
+}
+
+.timeline-error .error-message {
+  color: #e74c3c;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.retry-button {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.retry-button:hover {
+  background: #5568d3;
+}
+

@@ -1,0 +1,165 @@
+/**
+ * Public Itinerary View Styles
+ */
+
+.public-itinerary-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8f0ff 100%);
+  padding: 40px 20px;
+}
+
+.public-itinerary-header {
+  max-width: 900px;
+  margin: 0 auto 40px;
+  text-align: center;
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.read-only-badge {
+  display: inline-block;
+  background: #ff9800;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+}
+
+.public-itinerary-header h1 {
+  margin: 0 0 12px 0;
+  font-size: 32px;
+  font-weight: 600;
+  color: #333;
+}
+
+.itinerary-destination {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  color: #666;
+  font-weight: 500;
+}
+
+.itinerary-dates {
+  margin: 0;
+  font-size: 14px;
+  color: #999;
+}
+
+.public-itinerary-content {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.itinerary-day {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.day-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 16px 24px;
+}
+
+.day-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.day-activities {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.activity-item {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.activity-time {
+  font-weight: 600;
+  color: #667eea;
+  font-size: 15px;
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
+.activity-details {
+  flex: 1;
+}
+
+.activity-title {
+  font-weight: 600;
+  color: #333;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.activity-description {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.public-itinerary-loading,
+.public-itinerary-error,
+.public-itinerary-empty {
+  max-width: 600px;
+  margin: 100px auto;
+  text-align: center;
+  background: white;
+  padding: 60px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.public-itinerary-error .error-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.public-itinerary-error h2 {
+  margin: 0 0 12px 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.public-itinerary-error .error-message {
+  color: #e74c3c;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.public-itinerary-error .error-help {
+  color: #999;
+  font-size: 14px;
+  margin: 0;
+}
+
+.public-itinerary-empty {
+  color: #999;
+}
+
+.public-itinerary-empty p {
+  margin: 0;
+  font-size: 16px;
+}
+

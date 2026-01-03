@@ -117,6 +117,34 @@ export const getActivitiesByTripId = async (tripId, userId) => {
 };
 
 /**
+ * Get itinerary for a trip (activities ordered by date and time)
+ * @param {number} tripId - Trip ID
+ * @param {number} userId - User ID (for ownership verification)
+ * @returns {Promise<Array>} Array of activity objects ordered by date and time
+ */
+export const getItineraryByTripId = async (tripId, userId) => {
+    try {
+        // Verify trip ownership
+        await verifyTripOwnership(tripId, userId);
+
+        const result = await query(
+            `SELECT id, trip_id, date, time, title, description, created_at, updated_at 
+             FROM activities 
+             WHERE trip_id = $1 
+             ORDER BY date ASC, time ASC`,
+            [tripId]
+        );
+
+        return result.rows;
+    } catch (error) {
+        if (error instanceof AppError) {
+            throw error;
+        }
+        throw new AppError('Database error while fetching itinerary', 500);
+    }
+};
+
+/**
  * Get an activity by ID
  * @param {number} activityId - Activity ID
  * @returns {Promise<Object|null>} Activity object or null if not found

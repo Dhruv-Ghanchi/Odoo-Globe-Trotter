@@ -31,7 +31,36 @@ const config = {
     
     // CORS configuration
     cors: {
-        origin: process.env.CORS_ORIGIN || '*',
+        origin: (() => {
+            // In development, always allow common localhost ports for flexibility
+            if (process.env.NODE_ENV !== 'production') {
+                const devOrigins = ['http://localhost:3001', 'http://localhost:3002', 'http://localhost:5173'];
+                const envOrigin = process.env.CORS_ORIGIN;
+                if (envOrigin) {
+                    // If multiple origins are specified (comma-separated), split and add to dev origins
+                    if (envOrigin.includes(',')) {
+                        const envOrigins = envOrigin.split(',').map(origin => origin.trim());
+                        return [...new Set([...devOrigins, ...envOrigins])]; // Remove duplicates
+                    }
+                    // If single origin, add it to dev origins if not already present
+                    const origin = envOrigin.trim();
+                    if (!devOrigins.includes(origin)) {
+                        devOrigins.push(origin);
+                    }
+                    return devOrigins;
+                }
+                return devOrigins;
+            }
+            // In production, use environment variable or default to wildcard
+            const envOrigin = process.env.CORS_ORIGIN;
+            if (envOrigin) {
+                if (envOrigin.includes(',')) {
+                    return envOrigin.split(',').map(origin => origin.trim());
+                }
+                return envOrigin;
+            }
+            return '*';
+        })(),
     },
 };
 

@@ -1,0 +1,187 @@
+/**
+ * Error Dialog Styles
+ * 
+ * Modal dialog for displaying error messages.
+ */
+
+.error-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.error-dialog {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease-out;
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.error-dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  color: white;
+}
+
+.error-dialog-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.error-dialog-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  line-height: 1;
+}
+
+.error-dialog-close:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.error-dialog-close:active {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.error-dialog-body {
+  padding: 24px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.error-dialog-body p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+  word-wrap: break-word;
+}
+
+.error-dialog-action {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.error-dialog-link {
+  display: inline-block;
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.error-dialog-link:hover {
+  background-color: #f0f0ff;
+  color: #5a67d8;
+}
+
+.error-dialog-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.error-dialog-button {
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.error-dialog-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.error-dialog-button:active {
+  transform: translateY(0);
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+  .error-dialog {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .error-dialog-header {
+    padding: 16px 20px;
+  }
+
+  .error-dialog-header h2 {
+    font-size: 18px;
+  }
+
+  .error-dialog-body {
+    padding: 20px;
+  }
+
+  .error-dialog-footer {
+    padding: 12px 20px;
+  }
+}
+

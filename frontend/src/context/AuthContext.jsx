@@ -77,9 +77,26 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: response.error?.message || 'Signup failed' };
       }
     } catch (err) {
-      const errorMessage = err.error?.message || err.message || 'Signup failed';
+      console.error('AuthContext: Signup exception:', err);
+      // Extract error message from axios error response
+      let errorMessage = 'Signup failed. Please check your connection and try again.';
+      
+      // Check for network errors
+      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
+        errorMessage = 'Network error: Unable to connect to the server. Please check your internet connection.';
+      } else if (err?.error?.message) {
+        errorMessage = err.error.message;
+      } else if (err?.response?.data?.error?.message) {
+        errorMessage = err.response.data.error.message;
+      } else if (err?.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err?.message) {
+        errorMessage = err.message;
+      }
+      
+      console.error('AuthContext: Setting error message:', errorMessage);
       setError(errorMessage);
-      return { success: false, error: errorMessage, details: err.error?.details };
+      return { success: false, error: errorMessage, details: err.error?.details || err.response?.data?.error?.details };
     }
   };
 
@@ -89,20 +106,46 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setError(null);
+      console.log('AuthContext: Attempting login for:', email);
       const response = await loginAPI(email, password);
       
-      if (response.success) {
+      console.log('AuthContext: Login API response:', response);
+      
+      if (response && response.success) {
         const { user, token } = response.data;
-        setToken(token);
-        setAuthHeader(token);
-        setUser(user);
+        if (token) {
+          setToken(token);
+          setAuthHeader(token);
+        }
+        if (user) {
+          setUser(user);
+        }
         return { success: true };
       } else {
-        setError(response.error?.message || 'Login failed');
-        return { success: false, error: response.error?.message || 'Login failed' };
+        const errorMsg = response?.error?.message || 'Login failed';
+        console.error('AuthContext: Login failed -', errorMsg);
+        setError(errorMsg);
+        return { success: false, error: errorMsg };
       }
     } catch (err) {
-      const errorMessage = err.error?.message || err.message || 'Login failed';
+      console.error('AuthContext: Login exception:', err);
+      // Extract error message from axios error response
+      let errorMessage = 'Login failed. Please check your connection and try again.';
+      
+      // Check for network errors
+      if (err.code === 'ERR_NETWORK' || err.message?.includes('Network Error')) {
+        errorMessage = 'Network error: Unable to connect to the server. Please check your internet connection.';
+      } else if (err?.error?.message) {
+        errorMessage = err.error.message;
+      } else if (err?.response?.data?.error?.message) {
+        errorMessage = err.response.data.error.message;
+      } else if (err?.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err?.message) {
+        errorMessage = err.message;
+      }
+      
+      console.error('AuthContext: Setting error message:', errorMessage);
       setError(errorMessage);
       return { success: false, error: errorMessage };
     }

@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { validateEmail } from '../utils/emailValidator.js';
+import ErrorDialog from './ErrorDialog.jsx';
 import './Auth.css';
 
 const Signup = () => {
@@ -22,6 +23,8 @@ const Signup = () => {
   });
   const [validationErrors, setValidationErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -30,10 +33,19 @@ const Signup = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  // Clear errors when component mounts
+  // Clear errors only when component first mounts (not on every render)
   useEffect(() => {
     clearError();
-  }, [clearError]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array - only run on mount
+
+  // Show error dialog when error state changes
+  useEffect(() => {
+    if (error) {
+      setErrorMessage(error);
+      setShowErrorDialog(true);
+    }
+  }, [error]);
 
   /**
    * Validate form inputs
@@ -115,32 +127,37 @@ const Signup = () => {
             details[detail.field] = detail.message;
           });
           setValidationErrors((prev) => ({ ...prev, ...details }));
+        } else if (result.error) {
+          // Show error in dialog if no field-specific details
+          setErrorMessage(result.error);
+          setShowErrorDialog(true);
         }
       }
     } catch (err) {
       setIsSubmitting(false);
       console.error('Signup error:', err);
       // Error is already handled by AuthContext and set in error state
+      // The useEffect will show the dialog when error state is set
     }
   };
 
-  return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h1>Sign Up</h1>
-        <p className="auth-subtitle">Create a new account</p>
+  const handleCloseErrorDialog = () => {
+    setShowErrorDialog(false);
+    setErrorMessage('');
+    clearError();
+  };
 
-        {/* Display API error */}
-        {error && (
-          <div className="error-message" role="alert">
-            {error}
-            {(error.includes('User Already Exists') || error.includes('Please Login')) && (
-              <div className="error-action">
-                <Link to="/login">Go to Login</Link>
-              </div>
-            )}
-          </div>
-        )}
+  return (
+    <>
+      <ErrorDialog
+        error={errorMessage}
+        show={showErrorDialog}
+        onClose={handleCloseErrorDialog}
+      />
+      <div className="auth-container">
+        <div className="auth-card">
+          <h1>Sign Up</h1>
+          <p className="auth-subtitle">Create a new account</p>
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="form-group">
@@ -203,11 +220,12 @@ const Signup = () => {
           </button>
         </form>
 
-        <p className="auth-link">
-          Already have an account? <Link to="/login">Login</Link>
-        </p>
+          <p className="auth-link">
+            Already have an account? <Link to="/login">Login</Link>
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { validateEmail } from '../utils/emailValidator.js';
+import ErrorDialog from './ErrorDialog.jsx';
 import './Auth.css';
 
 const Login = () => {
@@ -21,6 +22,8 @@ const Login = () => {
   });
   const [validationErrors, setValidationErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -29,10 +32,19 @@ const Login = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  // Clear errors when component mounts or form changes
+  // Clear errors only when component first mounts (not on every render)
   useEffect(() => {
     clearError();
-  }, [clearError]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array - only run on mount
+
+  // Show error dialog when error state changes
+  useEffect(() => {
+    if (error) {
+      setErrorMessage(error);
+      setShowErrorDialog(true);
+    }
+  }, [error]);
 
   /**
    * Validate form inputs
@@ -89,31 +101,51 @@ const Login = () => {
     }
 
     setIsSubmitting(true);
-    const result = await login(formData.email, formData.password);
-    setIsSubmitting(false);
-
-    if (result.success) {
-      navigate('/dashboard', { replace: true });
+    clearError(); // Clear any previous errors
+    
+    try {
+      const result = await login(formData.email, formData.password);
+      
+      console.log('Login result:', result); // Debug log
+      
+      if (result && result.success) {
+        // Small delay to ensure state is updated
+        setTimeout(() => {
+          navigate('/dashboard', { replace: true });
+        }, 100);
+      } else {
+        // Login failed but no error was thrown
+        const errorMsg = result?.error || 'Login failed. Please try again.';
+        setErrorMessage(errorMsg);
+        setShowErrorDialog(true);
+        console.error('Login failed:', result);
+      }
+    } catch (err) {
+      console.error('Login error caught:', err);
+      // Error is already handled by AuthContext and set in error state
+      // The useEffect will show the dialog when error state is set
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h1>Login</h1>
-        <p className="auth-subtitle">Sign in to your account</p>
+  const handleCloseErrorDialog = () => {
+    setShowErrorDialog(false);
+    setErrorMessage('');
+    clearError();
+  };
 
-        {/* Display API error */}
-        {error && (
-          <div className="error-message" role="alert">
-            {error}
-            {(error.includes("No User Exists") || error.includes("Sign Up first")) && (
-              <div className="error-action">
-                <Link to="/signup">Go to Sign Up</Link>
-              </div>
-            )}
-          </div>
-        )}
+  return (
+    <>
+      <ErrorDialog
+        error={errorMessage}
+        show={showErrorDialog}
+        onClose={handleCloseErrorDialog}
+      />
+      <div className="auth-container">
+        <div className="auth-card">
+          <h1>Login</h1>
+          <p className="auth-subtitle">Sign in to your account</p>
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="form-group">
@@ -159,11 +191,12 @@ const Login = () => {
           </button>
         </form>
 
-        <p className="auth-link">
-          Don't have an account? <Link to="/signup">Sign up</Link>
-        </p>
+          <p className="auth-link">
+            Don't have an account? <Link to="/signup">Sign up</Link>
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

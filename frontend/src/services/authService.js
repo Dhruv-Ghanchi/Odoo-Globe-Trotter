@@ -85,6 +85,9 @@ export const login = async (email, password) => {
     });
     return response.data;
   } catch (error) {
+    console.error('Login API error:', error);
+    console.error('Error response:', error.response);
+    console.error('Error response data:', error.response?.data);
     throw error.response?.data || { error: { message: 'Login failed' } };
   }
 };

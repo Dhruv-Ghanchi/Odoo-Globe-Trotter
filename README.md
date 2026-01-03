@@ -1,152 +1,120 @@
-# Travel Planner Backend API
+# 🌍 GlobeTrotter — Intelligent Travel Planner
 
-Backend API for Travel Planning Application - Built for Odoo Hiring Hackathon
+GlobeTrotter is a full-stack, database-driven travel planning web application built as part of the **Odoo Hackathon**.  
+The project focuses on **clean backend architecture, strong database design, and fully dynamic data handling**, rather than static mockups or shortcuts.
 
-## Tech Stack
+---
 
-- **Runtime**: Node.js (ES Modules)
-- **Framework**: Express.js
-- **Database**: PostgreSQL (using `pg` driver)
-- **Authentication**: JWT (JSON Web Tokens)
-- **Password Hashing**: bcryptjs
-- **Validation**: express-validator
+## 🎯 Hackathon Objective
 
-## Project Structure
+This project demonstrates:
+- Real-world **backend & database design**
+- Clean **REST API architecture**
+- Fully **dynamic, database-driven UI**
+- Secure **authentication & authorization**
+- Scalable and explainable code suitable for production use
 
-```
-.
-├── config/              # Configuration files
-│   ├── config.js       # App configuration (env vars)
-│   └── database.js       # PostgreSQL connection pool
-├── controllers/         # Request handlers (HTTP logic)
-├── middleware/          # Express middleware
-│   ├── auth.js         # JWT authentication
-│   ├── errorHandler.js # Centralized error handling
-│   └── validation.js   # Input validation wrapper
-├── routes/             # API route definitions
-│   └── index.js        # Main router
-├── services/           # Business logic & database operations
-├── utils/              # Utility functions
-│   ├── jwt.js         # JWT token helpers
-│   └── password.js    # Password hashing helpers
-├── app.js              # Express app setup
-├── server.js           # Server entry point
-├── schema.sql          # Database schema
-├── package.json        # Dependencies
-└── .env.example        # Environment variables template
-```
+---
 
-## Architecture Overview
+## 🚀 Core Features
 
-### Request Flow
-```
-Client Request
-    ↓
-Routes (routes/)
-    ↓
-Middleware (auth, validation)
-    ↓
-Controllers (controllers/)
-    ↓
-Services (services/)
-    ↓
-Database (config/database.js)
-    ↓
-Response
-```
+### 🔐 Authentication & Security
+- Secure Signup & Login
+- Password hashing using **bcrypt**
+- **JWT-based authentication**
+- Protected routes with proper authorization
+- Stateless and scalable auth flow
 
-### Layer Responsibilities
+---
 
-- **Routes**: Define API endpoints and HTTP methods
-- **Controllers**: Handle request/response, call services
-- **Services**: Business logic, database queries
-- **Middleware**: Authentication, validation, error handling
-- **Utils**: Reusable helper functions
+### 👤 User Profile Management
+- View and update profile details (name, email)
+- Secure password change with verification
+- Account deletion support
+- Clear separation between auth and user data
 
-## Setup Instructions
+---
 
-### 1. Install Dependencies
-```bash
-npm install
-```
+### ✈️ Trip Management
+- Create, view, update, and delete trips
+- Trips securely linked to authenticated users
+- Dynamic trip data stored in PostgreSQL
+- Ownership validation for all operations
 
-### 2. Database Setup
-```bash
-# Create PostgreSQL database
-createdb travel_planner
+---
 
-# Run schema
-psql -d travel_planner -f schema.sql
+### 🗺️ Activity & Itinerary Planning
+- Add activities with date, time, city, and cost
+- Activities grouped dynamically per trip
+- Interactive itinerary builder
+- Read-only itinerary view grouped by day and city
 
-# Seed test user (optional - for testing)
-npm run seed:test-user
-```
+---
 
-**Test User Credentials** (after running seed):
-- Email: `test@example.com`
-- Password: `password123`
+### 💰 Budget & Cost Insights
+- Dynamic cost calculation using SQL aggregation
+- Total trip cost computed on the fly
+- Average cost per day
+- Highlights high-spend days
+- No derived values stored in the database
 
-### 3. Environment Configuration
-```bash
-# Copy example file
-cp .env.example .env
+---
 
-# Edit .env with your database credentials
-```
+### 📊 Dashboard Insights
+- Personalized dashboard
+- Dynamic statistics:
+  - Total trips
+  - Total activities
+  - Upcoming activities
+- All values derived from database queries
 
-### 4. Start Server
-```bash
-# Development (with auto-reload)
-npm run dev
+---
 
-# Production
-npm start
-```
+### 🌐 Public Itinerary Sharing
+- Read-only public itinerary view
+- No authentication required
+- No sensitive user data exposed
+- Safe, controlled public access
 
-## Environment Variables
+---
 
-See `.env.example` for all required variables:
-- `PORT`: Server port (default: 3000)
-- `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`: Database config
-- `JWT_SECRET`: Secret key for JWT tokens
-- `JWT_EXPIRES_IN`: Token expiration (default: 7d)
-- `CORS_ORIGIN`: Allowed CORS origins
+## 🧠 What Makes This Project Strong
 
-## API Endpoints
+- No static or mock data
+- Strong PostgreSQL schema with ownership checks
+- Derived values computed dynamically (not stored)
+- Clean separation: Routes → Controllers → Services → DB
+- Demo-stable and easy to explain
 
-### Health Check
-- `GET /api/health` - Server status
+---
 
-*More endpoints will be added as features are implemented*
+## 🛠️ Technology Stack
 
-## Error Handling
+### Backend
+- Node.js
+- Express.js
+- PostgreSQL
+- JWT Authentication
+- bcrypt (password hashing)
+- express-validator (validation)
 
-All errors are handled centrally through `middleware/errorHandler.js`:
-- Consistent error response format
-- PostgreSQL error code mapping
-- JWT error handling
-- Development vs production error details
+### Frontend
+- React
+- Vite
+- React Router
+- Axios
+- Custom responsive CSS
 
-## Authentication
+---
 
-JWT-based authentication:
-- Use `middleware/auth.js` to protect routes
-- Token in `Authorization: Bearer <token>` header
-- User info attached to `req.user` after authentication
+## ⚙️ Installation & Setup
 
-## Database Connection
+### Prerequisites
+- Node.js (v18+)
+- PostgreSQL (running)
 
-Connection pool managed in `config/database.js`:
-- Automatic connection pooling
-- Query logging in development
-- Graceful error handling
+---
 
-## Next Steps
-
-1. Implement user registration/login endpoints
-2. Implement trip CRUD operations
-3. Implement activity CRUD operations
-4. Add input validation rules
-5. Add unit tests
-
-
+### 1️⃣ Database Setup
+```sql
+CREATE DATABASE travel_planner;

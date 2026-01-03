@@ -39,13 +39,28 @@ GlobeTrotter helps users plan, organize, and manage their trips effortlessly. It
 
 ## 🖼️ Screenshots
 
-| Login & Signup | Dashboard |
+| Login | Dashboard |
 |---------------|-----------|
 | ![Login](screenshots/login.png) | ![Dashboard](screenshots/dashboard.png) |
 
 | Trips | Itinerary |
 |------|-----------|
 | ![Trips](screenshots/trips.png) | ![Itinerary](screenshots/itinerary.png) |
+
+| Activities | Budget |
+|------|-----------|
+| ![Trips](screenshots/activities.png) | ![Itinerary](screenshots/budget.png) |
+
+| Timeline | Profile1 |
+|------|-----------|
+| ![Trips](screenshots/timeline.png) | ![Itinerary](screenshots/profile1.png) |
+
+| SignUp | Profile2 |
+|------|-----------|
+| ![Trips](screenshots/signup.png) | ![Itinerary](screenshots/profile2.png) |
+
+
+
 
 ---
 

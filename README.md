@@ -77,7 +77,14 @@ createdb travel_planner
 
 # Run schema
 psql -d travel_planner -f schema.sql
+
+# Seed test user (optional - for testing)
+npm run seed:test-user
 ```
+
+**Test User Credentials** (after running seed):
+- Email: `test@example.com`
+- Password: `password123`
 
 ### 3. Environment Configuration
 ```bash

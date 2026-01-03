@@ -113,13 +113,18 @@ export const AuthProvider = ({ children }) => {
       
       if (response && response.success) {
         const { user, token } = response.data;
+        console.log('AuthContext: Login successful, setting user and token');
         if (token) {
           setToken(token);
           setAuthHeader(token);
+          console.log('AuthContext: Token set');
         }
         if (user) {
           setUser(user);
+          console.log('AuthContext: User set:', user);
         }
+        // Force a small delay to ensure state updates propagate
+        await new Promise(resolve => setTimeout(resolve, 50));
         return { success: true };
       } else {
         const errorMsg = response?.error?.message || 'Login failed';

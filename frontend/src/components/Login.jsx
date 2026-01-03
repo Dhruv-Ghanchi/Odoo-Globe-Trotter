@@ -28,7 +28,14 @@ const Login = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard', { replace: true });
+      console.log('Login: User is already authenticated, redirecting to dashboard');
+      // Show a brief message before redirecting
+      setErrorMessage('You are already logged in. Redirecting to dashboard...');
+      setShowErrorDialog(true);
+      // Redirect after a short delay
+      setTimeout(() => {
+        navigate('/dashboard', { replace: true });
+      }, 1500);
     }
   }, [isAuthenticated, navigate]);
 
@@ -38,9 +45,9 @@ const Login = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Empty dependency array - only run on mount
 
-  // Show error dialog when error state changes
+  // Show error dialog when error state changes (but not if it's the "already logged in" message)
   useEffect(() => {
-    if (error) {
+    if (error && !error.includes('already logged in')) {
       setErrorMessage(error);
       setShowErrorDialog(true);
     }
@@ -109,24 +116,32 @@ const Login = () => {
       console.log('Login result:', result); // Debug log
       
       if (result && result.success) {
-        // Small delay to ensure state is updated
+        // Wait a bit for the user state to update, then check if we need to navigate
+        // The useEffect should handle the redirect, but we'll also check here as a fallback
         setTimeout(() => {
-          navigate('/dashboard', { replace: true });
-        }, 100);
+          if (isAuthenticated) {
+            console.log('Login: Manual redirect to dashboard');
+            navigate('/dashboard', { replace: true });
+          } else {
+            console.warn('Login: Success but user not authenticated yet, waiting for useEffect');
+          }
+        }, 200);
       } else {
         // Login failed but no error was thrown
         const errorMsg = result?.error || 'Login failed. Please try again.';
         setErrorMessage(errorMsg);
         setShowErrorDialog(true);
         console.error('Login failed:', result);
+        setIsSubmitting(false);
       }
     } catch (err) {
       console.error('Login error caught:', err);
       // Error is already handled by AuthContext and set in error state
       // The useEffect will show the dialog when error state is set
-    } finally {
       setIsSubmitting(false);
     }
+    // Note: Don't set isSubmitting to false on success - let the redirect happen
+    // If redirect fails, the useEffect will handle it
   };
 
   const handleCloseErrorDialog = () => {

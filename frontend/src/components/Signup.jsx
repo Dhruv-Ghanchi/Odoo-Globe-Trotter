@@ -134,6 +134,11 @@ const Signup = () => {
         {error && (
           <div className="error-message" role="alert">
             {error}
+            {(error.includes('already exists') || error.includes('User already exists')) && (
+              <div className="error-action">
+                <Link to="/login">Go to Login</Link>
+              </div>
+            )}
           </div>
         )}
 

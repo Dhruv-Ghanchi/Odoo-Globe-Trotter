@@ -1,10 +1,14 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import './Header.css';
 
 const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Hide header buttons on login/signup pages
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/signup';
 
   const handleLogout = () => {
     logout();
@@ -29,7 +33,7 @@ const Header = () => {
                 Logout
               </button>
             </>
-          ) : (
+          ) : !isAuthPage ? (
             <>
               <Link to="/login" className="btn btn-link">
                 Login
@@ -38,7 +42,7 @@ const Header = () => {
                 Sign up
               </Link>
             </>
-          )}
+          ) : null}
         </nav>
       </div>
     </header>

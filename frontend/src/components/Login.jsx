@@ -107,6 +107,11 @@ const Login = () => {
         {error && (
           <div className="error-message" role="alert">
             {error}
+            {(error.includes("doesn't exist") || error.includes("User doesn't exist")) && (
+              <div className="error-action">
+                <Link to="/signup">Go to Sign Up</Link>
+              </div>
+            )}
           </div>
         )}
 

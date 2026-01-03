@@ -24,7 +24,7 @@ export const signup = async (req, res, next) => {
         // Check if user already exists
         const existingUser = await findByEmail(email);
         if (existingUser) {
-            return next(new AppError('Email already exists', 409));
+            return next(new AppError('User already exists, please login', 409));
         }
 
         // Hash password
@@ -70,7 +70,7 @@ export const login = async (req, res, next) => {
         // Find user by email
         const user = await findByEmail(email);
         if (!user) {
-            return next(new AppError('Invalid email or password', 401));
+            return next(new AppError('User doesn\'t exist, please sign up to continue', 401));
         }
 
         // Verify password

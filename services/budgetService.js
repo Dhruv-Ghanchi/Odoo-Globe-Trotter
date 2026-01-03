@@ -88,6 +88,7 @@ export const getTripBudget = async (tripId, userId) => {
         if (error instanceof AppError) {
             throw error;
         }
+        console.error('Budget calculation error:', error);
         throw new AppError('Database error while calculating budget', 500);
     }
 };

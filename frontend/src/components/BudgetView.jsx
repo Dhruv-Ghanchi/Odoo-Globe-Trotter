@@ -7,6 +7,7 @@
 
 import { useState, useEffect } from 'react';
 import { getBudget } from '../services/tripService.js';
+import Loader from './Loader.jsx';
 import './BudgetView.css';
 
 const BudgetView = ({ tripId }) => {
@@ -71,7 +72,8 @@ const BudgetView = ({ tripId }) => {
     return (
       <div className="budget-view-container">
         <div className="budget-loading">
-          <div>Loading budget...</div>
+          <Loader />
+          <div style={{ marginTop: '16px', color: '#666' }}>Loading budget...</div>
         </div>
       </div>
     );

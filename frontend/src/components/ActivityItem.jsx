@@ -26,6 +26,7 @@ const ActivityItem = ({ activity, onEdit, onDelete }) => {
               onClick={() => onEdit()}
               className="icon-button edit-button"
               title="Edit activity"
+              aria-label="Edit activity"
             >
               ✏️
             </button>
@@ -33,6 +34,7 @@ const ActivityItem = ({ activity, onEdit, onDelete }) => {
               onClick={() => onDelete()}
               className="icon-button delete-button"
               title="Delete activity"
+              aria-label="Delete activity"
             >
               🗑️
             </button>

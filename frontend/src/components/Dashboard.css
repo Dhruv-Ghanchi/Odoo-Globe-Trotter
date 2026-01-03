@@ -115,11 +115,20 @@
 @media (max-width: 1024px) {
   .dashboard-layout {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .dashboard-left,
   .dashboard-right {
     max-height: none;
+  }
+
+  .view-mode-toggle {
+    flex-wrap: wrap;
+  }
+
+  .view-mode-toggle button {
+    min-width: calc(50% - 4px);
   }
 }
 
@@ -138,5 +147,27 @@
   .dashboard-left,
   .dashboard-right {
     padding: 16px;
+    border-radius: 8px;
+  }
+
+  .view-mode-toggle {
+    gap: 6px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+  }
+
+  .view-mode-toggle button {
+    padding: 6px 12px;
+    font-size: 13px;
+    min-width: calc(50% - 3px);
+  }
+
+  .trip-list-header h2 {
+    font-size: 18px;
+  }
+
+  .add-button {
+    padding: 8px 16px;
+    font-size: 13px;
   }
 }

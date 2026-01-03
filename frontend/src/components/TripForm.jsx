@@ -119,11 +119,35 @@ const TripForm = ({ trip, onSave, onCancel }) => {
     }
   };
 
+  // Handle ESC key to close form
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && !isSubmitting) {
+        onCancel();
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = '';
+    };
+  }, [onCancel, isSubmitting]);
+
   return (
-    <div className="trip-form-overlay">
-      <div className="trip-form-card">
+    <div 
+      className="trip-form-overlay"
+      onClick={onCancel}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="trip-form-title"
+    >
+      <div 
+        className="trip-form-card"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="trip-form-header">
-          <h2>{isEditing ? 'Edit Trip' : 'Create New Trip'}</h2>
+          <h2 id="trip-form-title">{isEditing ? 'Edit Trip' : 'Create New Trip'}</h2>
           <button onClick={onCancel} className="close-button">
             ×
           </button>

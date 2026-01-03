@@ -47,6 +47,7 @@ const TripCard = ({ trip, isSelected, onSelect, onEdit, onDelete }) => {
             }}
             className="icon-button edit-button"
             title="Edit trip"
+            aria-label="Edit trip"
           >
             ✏️
           </button>
@@ -57,6 +58,7 @@ const TripCard = ({ trip, isSelected, onSelect, onEdit, onDelete }) => {
             }}
             className="icon-button delete-button"
             title="Delete trip"
+            aria-label="Delete trip"
           >
             🗑️
           </button>

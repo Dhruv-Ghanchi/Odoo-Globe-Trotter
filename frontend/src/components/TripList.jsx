@@ -8,14 +8,17 @@ import { useState, useEffect } from 'react';
 import { getTrips, deleteTrip } from '../services/tripService.js';
 import TripCard from './TripCard.jsx';
 import TripForm from './TripForm.jsx';
+import ConfirmDialog from './ConfirmDialog.jsx';
+import Loader from './Loader.jsx';
 import './TripList.css';
 
-const TripList = ({ onTripSelect, selectedTripId }) => {
+const TripList = ({ onTripSelect, selectedTripId, showToast }) => {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingTrip, setEditingTrip] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, tripId: null });
 
   /**
    * Fetch trips from API
@@ -40,12 +43,18 @@ const TripList = ({ onTripSelect, selectedTripId }) => {
   }, []);
 
   /**
-   * Handle trip deletion
+   * Handle trip deletion request
    */
-  const handleDelete = async (tripId) => {
-    if (!window.confirm('Are you sure you want to delete this trip? All activities will also be deleted.')) {
-      return;
-    }
+  const handleDeleteClick = (tripId) => {
+    setDeleteConfirm({ isOpen: true, tripId });
+  };
+
+  /**
+   * Confirm and execute trip deletion
+   */
+  const handleDeleteConfirm = async () => {
+    const { tripId } = deleteConfirm;
+    setDeleteConfirm({ isOpen: false, tripId: null });
 
     try {
       const response = await deleteTrip(tripId);
@@ -56,9 +65,10 @@ const TripList = ({ onTripSelect, selectedTripId }) => {
         if (selectedTripId === tripId) {
           onTripSelect(null);
         }
+        showToast?.('Trip deleted successfully', 'success');
       }
     } catch (err) {
-      alert(err.error?.message || 'Failed to delete trip');
+      showToast?.(err.error?.message || 'Failed to delete trip', 'error');
     }
   };
 
@@ -84,12 +94,15 @@ const TripList = ({ onTripSelect, selectedTripId }) => {
   const handleTripSaved = () => {
     fetchTrips(); // Refresh list
     handleFormClose();
+    const message = editingTrip ? 'Trip updated successfully' : 'Trip created successfully';
+    showToast?.(message, 'success');
   };
 
   if (loading) {
     return (
       <div className="trip-list-loading">
-        <div>Loading trips...</div>
+        <Loader />
+        <div style={{ marginTop: '16px', color: '#666' }}>Loading trips...</div>
       </div>
     );
   }
@@ -122,9 +135,22 @@ const TripList = ({ onTripSelect, selectedTripId }) => {
         />
       )}
 
+      <ConfirmDialog
+        isOpen={deleteConfirm.isOpen}
+        title="Delete Trip"
+        message="Are you sure you want to delete this trip? All activities will also be deleted. This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteConfirm({ isOpen: false, tripId: null })}
+      />
+
       {trips.length === 0 ? (
         <div className="empty-state">
-          <p>No trips yet. Create your first trip to get started!</p>
+          <div className="empty-state-icon">✈️</div>
+          <p><strong>No trips yet.</strong></p>
+          <p>Create your first trip to start planning your adventures!</p>
         </div>
       ) : (
         <>
@@ -141,7 +167,7 @@ const TripList = ({ onTripSelect, selectedTripId }) => {
                 isSelected={selectedTripId === trip.id}
                 onSelect={(tripId) => onTripSelect(tripId)}
                 onEdit={() => handleEdit(trip)}
-                onDelete={() => handleDelete(trip.id)}
+                onDelete={() => handleDeleteClick(trip.id)}
               />
             ))}
           </div>

@@ -7,6 +7,7 @@
 
 import { useState, useEffect } from 'react';
 import { getItinerary } from '../services/tripService.js';
+import Loader from './Loader.jsx';
 import './ItineraryView.css';
 
 const ItineraryView = ({ tripId }) => {

@@ -11,6 +11,7 @@ import ActivityList from './ActivityList.jsx';
 import ItineraryView from './ItineraryView.jsx';
 import BudgetView from './BudgetView.jsx';
 import TimelineView from './TimelineView.jsx';
+import ToastContainer, { useToast } from './ToastContainer.jsx';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -18,6 +19,7 @@ const Dashboard = () => {
   const [selectedTripId, setSelectedTripId] = useState(null);
   const [viewMode, setViewMode] = useState('activities'); // 'activities', 'itinerary', 'budget', or 'timeline'
   const dashboardContentRef = useRef(null);
+  const { showToast, removeToast, toasts } = useToast();
 
   /**
    * Handle click outside trip cards to deselect
@@ -90,6 +92,7 @@ const Dashboard = () => {
             <TripList
               onTripSelect={setSelectedTripId}
               selectedTripId={selectedTripId}
+              showToast={showToast}
             />
           </div>
           <div className="dashboard-right">
@@ -98,31 +101,35 @@ const Dashboard = () => {
                 <button
                   className={viewMode === 'activities' ? 'active' : ''}
                   onClick={() => setViewMode('activities')}
+                  aria-label="View activities"
                 >
                   Activities
                 </button>
                 <button
                   className={viewMode === 'itinerary' ? 'active' : ''}
                   onClick={() => setViewMode('itinerary')}
+                  aria-label="View itinerary"
                 >
                   Itinerary
                 </button>
                 <button
                   className={viewMode === 'budget' ? 'active' : ''}
                   onClick={() => setViewMode('budget')}
+                  aria-label="View budget"
                 >
                   Budget
                 </button>
                 <button
                   className={viewMode === 'timeline' ? 'active' : ''}
                   onClick={() => setViewMode('timeline')}
+                  aria-label="View timeline"
                 >
                   Timeline
                 </button>
               </div>
             )}
             {viewMode === 'activities' ? (
-              <ActivityList tripId={selectedTripId} />
+              <ActivityList tripId={selectedTripId} showToast={showToast} />
             ) : viewMode === 'itinerary' ? (
               <ItineraryView tripId={selectedTripId} />
             ) : viewMode === 'budget' ? (
@@ -131,6 +138,10 @@ const Dashboard = () => {
               <TimelineView tripId={selectedTripId} />
             )}
           </div>
+        </div>
+      </main>
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
+    </div>
         </div>
       </main>
     </div>

@@ -8,14 +8,17 @@ import { useState, useEffect } from 'react';
 import { getActivities, deleteActivity } from '../services/activityService.js';
 import ActivityItem from './ActivityItem.jsx';
 import ActivityForm from './ActivityForm.jsx';
+import ConfirmDialog from './ConfirmDialog.jsx';
+import Loader from './Loader.jsx';
 import './ActivityList.css';
 
-const ActivityList = ({ tripId }) => {
+const ActivityList = ({ tripId, showToast }) => {
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [editingActivity, setEditingActivity] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState({ isOpen: false, activityId: null });
 
   /**
    * Fetch activities from API
@@ -45,20 +48,27 @@ const ActivityList = ({ tripId }) => {
   }, [tripId]);
 
   /**
-   * Handle activity deletion
+   * Handle activity deletion request
    */
-  const handleDelete = async (activityId) => {
-    if (!window.confirm('Are you sure you want to delete this activity?')) {
-      return;
-    }
+  const handleDeleteClick = (activityId) => {
+    setDeleteConfirm({ isOpen: true, activityId });
+  };
+
+  /**
+   * Confirm and execute activity deletion
+   */
+  const handleDeleteConfirm = async () => {
+    const { activityId } = deleteConfirm;
+    setDeleteConfirm({ isOpen: false, activityId: null });
 
     try {
       const response = await deleteActivity(activityId);
       if (response.success) {
         setActivities((prev) => prev.filter((activity) => activity.id !== activityId));
+        showToast?.('Activity deleted successfully', 'success');
       }
     } catch (err) {
-      alert(err.error?.message || 'Failed to delete activity');
+      showToast?.(err.error?.message || 'Failed to delete activity', 'error');
     }
   };
 
@@ -84,6 +94,8 @@ const ActivityList = ({ tripId }) => {
   const handleActivitySaved = () => {
     fetchActivities(); // Refresh list
     handleFormClose();
+    const message = editingActivity ? 'Activity updated successfully' : 'Activity added successfully';
+    showToast?.(message, 'success');
   };
 
   if (!tripId) {
@@ -101,7 +113,8 @@ const ActivityList = ({ tripId }) => {
   if (loading) {
     return (
       <div className="activity-list-loading">
-        <div>Loading activities...</div>
+        <Loader />
+        <div style={{ marginTop: '16px', color: '#666' }}>Loading activities...</div>
       </div>
     );
   }
@@ -147,9 +160,22 @@ const ActivityList = ({ tripId }) => {
         />
       )}
 
+      <ConfirmDialog
+        isOpen={deleteConfirm.isOpen}
+        title="Delete Activity"
+        message="Are you sure you want to delete this activity? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setDeleteConfirm({ isOpen: false, activityId: null })}
+      />
+
       {activities.length === 0 ? (
         <div className="empty-state">
-          <p>No activities yet. Add your first activity to start planning!</p>
+          <div className="empty-state-icon">📅</div>
+          <p><strong>No activities yet.</strong></p>
+          <p>Add your first activity to start planning your trip itinerary!</p>
         </div>
       ) : (
         <div className="activities-by-date">
@@ -169,7 +195,7 @@ const ActivityList = ({ tripId }) => {
                     key={activity.id}
                     activity={activity}
                     onEdit={() => handleEdit(activity)}
-                    onDelete={() => handleDelete(activity.id)}
+                    onDelete={() => handleDeleteClick(activity.id)}
                   />
                 ))}
               </div>

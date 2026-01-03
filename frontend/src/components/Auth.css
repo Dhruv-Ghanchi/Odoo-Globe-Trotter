@@ -5,21 +5,37 @@
  */
 
 .auth-container {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
+  /* Background image - using the provided file at src/assets/auth-bg.jpeg */
+  background-image: url('/src/assets/auth-bg.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .auth-card {
-  background: white;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(6px);
   border-radius: 12px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  padding: 40px;
+  box-shadow: 0 12px 50px rgba(10, 20, 40, 0.18);
+  padding: 36px;
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
+  border: 1px solid rgba(255,255,255,0.6);
+}
+
+/* dark overlay to improve contrast against busy images */
+.auth-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 12, 20, 0.35);
+  pointer-events: none;
 }
 
 .auth-card h1 {

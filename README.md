@@ -1,104 +1,87 @@
-# 🌍 GlobeTrotter — Intelligent Travel Planner
+# 🌍 GlobeTrotter — Intelligent Travel Planner  
+*A full-stack, database-driven travel planning platform built for the Odoo Hackathon.*
 
-GlobeTrotter is a full-stack, database-driven travel planning web application built as part of the **Odoo Hackathon**.  
-The project focuses on **clean backend architecture, strong database design, and fully dynamic data handling**, rather than static mockups or shortcuts.
-
----
-
-## 🎯 Hackathon Objective
-
-This project demonstrates:
-- Real-world **backend & database design**
-- Clean **REST API architecture**
-- Fully **dynamic, database-driven UI**
-- Secure **authentication & authorization**
-- Scalable and explainable code suitable for production use
+GlobeTrotter helps users plan trips, manage itineraries, and track travel costs using a **clean backend architecture**, **strong PostgreSQL data modeling**, and a **fully dynamic React UI**.
 
 ---
 
-## 🚀 Core Features
+## 🖼️ Screenshots
+
+> *(Add screenshots here before final submission)*
+
+| Login & Signup | Dashboard |
+|---------------|-----------|
+| ![Login](screenshots/login.png) | ![Dashboard](screenshots/dashboard.png) |
+
+| Trips | Itinerary |
+|------|-----------|
+| ![Trips](screenshots/trips.png) | ![Itinerary](screenshots/itinerary.png) |
+
+| Budget View | Public Itinerary |
+|------------|------------------|
+| ![Budget](screenshots/budget.png) | ![Public](screenshots/public.png) |
+
+---
+
+## 🎯 Why This Project Stands Out
+
+- Fully **dynamic, database-driven** application
+- Strong **backend & SQL aggregation logic**
+- Clean **REST API design**
+- Proper **authentication & data isolation**
+- No mock data, no hardcoded business values
+- Demo-stable and easy to explain
+
+---
+
+## 🚀 Key Features
 
 ### 🔐 Authentication & Security
-- Secure Signup & Login
-- Password hashing using **bcrypt**
+- Secure signup & login
+- Password hashing with **bcrypt**
 - **JWT-based authentication**
-- Protected routes with proper authorization
-- Stateless and scalable auth flow
+- Protected routes and ownership checks
 
----
-
-### 👤 User Profile Management
-- View and update profile details (name, email)
-- Secure password change with verification
-- Account deletion support
-- Clear separation between auth and user data
-
----
-
-### ✈️ Trip Management
-- Create, view, update, and delete trips
-- Trips securely linked to authenticated users
-- Dynamic trip data stored in PostgreSQL
-- Ownership validation for all operations
-
----
-
-### 🗺️ Activity & Itinerary Planning
+### ✈️ Trip & Activity Management
+- Create, update, delete trips
 - Add activities with date, time, city, and cost
-- Activities grouped dynamically per trip
+- Activities dynamically grouped per trip
+
+### 🗺️ Itinerary Planning
 - Interactive itinerary builder
 - Read-only itinerary view grouped by day and city
-
----
+- Timeline-style visualization
 
 ### 💰 Budget & Cost Insights
-- Dynamic cost calculation using SQL aggregation
-- Total trip cost computed on the fly
+- Total trip cost computed dynamically
 - Average cost per day
 - Highlights high-spend days
-- No derived values stored in the database
-
----
+- No derived values stored in DB
 
 ### 📊 Dashboard Insights
-- Personalized dashboard
-- Dynamic statistics:
-  - Total trips
-  - Total activities
-  - Upcoming activities
-- All values derived from database queries
-
----
+- Total trips
+- Total activities
+- Upcoming activities
+- All stats computed using SQL aggregation
 
 ### 🌐 Public Itinerary Sharing
 - Read-only public itinerary view
 - No authentication required
 - No sensitive user data exposed
-- Safe, controlled public access
 
 ---
 
-## 🧠 What Makes This Project Strong
+## 🧪 Tech Stack
 
-- No static or mock data
-- Strong PostgreSQL schema with ownership checks
-- Derived values computed dynamically (not stored)
-- Clean separation: Routes → Controllers → Services → DB
-- Demo-stable and easy to explain
-
----
-
-## 🛠️ Technology Stack
-
-### Backend
+**Backend**
 - Node.js
 - Express.js
 - PostgreSQL
 - JWT Authentication
-- bcrypt (password hashing)
-- express-validator (validation)
+- bcrypt
+- express-validator
 
-### Frontend
+**Frontend**
 - React
 - Vite
 - React Router
@@ -107,14 +90,8 @@ This project demonstrates:
 
 ---
 
-## ⚙️ Installation & Setup
+## ⚙️ Quick Start (For Judges)
 
-### Prerequisites
-- Node.js (v18+)
-- PostgreSQL (running)
-
----
-
-### 1️⃣ Database Setup
+### 1️⃣ Database
 ```sql
 CREATE DATABASE travel_planner;

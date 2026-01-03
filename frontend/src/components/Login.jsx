@@ -8,6 +8,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import { validateEmail } from '../utils/emailValidator.js';
 import './Auth.css';
 
 const Login = () => {
@@ -41,8 +42,11 @@ const Login = () => {
 
     if (!formData.email.trim()) {
       errors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = 'Please enter a valid email address';
+    } else {
+      const emailError = validateEmail(formData.email);
+      if (emailError) {
+        errors.email = emailError;
+      }
     }
 
     if (!formData.password) {

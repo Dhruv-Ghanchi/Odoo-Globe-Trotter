@@ -14,11 +14,13 @@ import { body } from 'express-validator';
 import { validate } from '../middleware/validation.js';
 import { authenticate } from '../middleware/auth.js';
 import { signup, login, getMe } from '../controllers/authController.js';
+import { customEmailValidator } from '../utils/emailValidator.js';
 
 const router = express.Router();
 
 /**
  * Validation rules for email
+ * Includes comprehensive domain validation
  */
 const emailValidation = body('email')
     .trim()
@@ -26,6 +28,7 @@ const emailValidation = body('email')
     .withMessage('Email is required')
     .isEmail()
     .withMessage('Please provide a valid email address')
+    .custom(customEmailValidator)
     .normalizeEmail();
 
 /**
